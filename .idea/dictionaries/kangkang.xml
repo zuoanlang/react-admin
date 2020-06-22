@@ -2,6 +2,7 @@
   <dictionary name="kangkang">
     <words>
       <w>antd</w>
+      <w>axios</w>
     </words>
   </dictionary>
 </component>
