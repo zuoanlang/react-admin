@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
-import {Form, Icon, Input, Button} from 'antd';
+import {Form, Icon, Input, Button, message} from 'antd';
+
+import {reqLogin} from '../../api/'
 
 import './login.less'
 
@@ -18,9 +20,20 @@ class Login extends Component {
         let form = this.props.form;
         let values = form.getFieldsValue();
         console.log(values)
-        this.props.form.validateFields((err,values)=>{
-            if (!err){
-                console.log('Received values of form: ', values);
+        this.props.form.validateFields(async (err, values) => {
+            if (!err) {
+                //
+                const {username, password} = values;
+                const result = await reqLogin(username, password);
+                console.log("request:",result)
+                if (result.status === 0) {
+                    message.success('登陆成功')
+                    // 跳转管理界面
+                    this.props.history.replace('/')
+                } else {
+                    message.error(result.msg)
+                }
+                // console.log('请求成功',response.data)
             } else {
                 console.log("校验失败")
             }
