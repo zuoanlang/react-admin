@@ -1,11 +1,14 @@
 import React, {Component} from 'react';
-import {Form, Icon, Input, Button, message} from 'antd';
+import {Redirect} from 'react-router-dom'
+import {Button, Form, Icon, Input, message} from 'antd';
 
 import {reqLogin} from '../../api/'
+import memoryUtils from "../../utils/memoryUtils";
+import storageUtils from "../../utils/storageUtils";
 
 import './login.less'
 
-import logo from './images/logo.png'
+import logo from '../../assets/images/logo.png'
 
 const Item = Form.Item;
 
@@ -25,9 +28,16 @@ class Login extends Component {
                 //
                 const {username, password} = values;
                 const result = await reqLogin(username, password);
-                console.log("request:",result)
+                console.log("request:", result)
                 if (result.status === 0) {
                     message.success('登陆成功')
+                    console.log(result.data)
+                    // 保存用户
+                    let user = result.data;
+                    // 保存到内存中
+                    memoryUtils.user = user;
+                    // 保存到store
+                    storageUtils.saveUser(user)
                     // 跳转管理界面
                     this.props.history.replace('/')
                 } else {
@@ -56,6 +66,11 @@ class Login extends Component {
     }
 
     render() {
+        // 检查用户登陆状态
+        let user = memoryUtils.user;
+        if (user._id){
+            return <Redirect to='/'/>
+        }
         // const form = this.props.form
         const {getFieldDecorator} = this.props.form;
         return (
