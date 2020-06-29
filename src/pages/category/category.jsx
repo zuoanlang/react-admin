@@ -97,8 +97,20 @@ class Category extends Component {
         })
     }
 
-    addCategory = () => {
-
+    addCategory = async () => {
+        // 1.隐藏确认框
+        this.setState({
+            showStatus: 0
+        })
+        // 2.收集数据,并提交添加分类的请求
+        const {parentId, categoryName} = this.form.getFieldsValue();
+        // 清除数据
+        this.form.resetFields()
+        const result = await reqAddCategory(categoryName, parentId);
+        if (result.status === 0) {
+            this.getCategories()
+        }
+        // 3.
     }
 
     updateCategory = () => {
@@ -113,7 +125,7 @@ class Category extends Component {
         // 清除数据
         this.form.resetFields()
         //2.发请求更新分类
-        const result = reqUpdateCategory({categoryId,categoryName});
+        const result = reqUpdateCategory({categoryId, categoryName});
         if (result.status === 0) {
             //3.重新显示列表
             this.getCategories()
@@ -217,7 +229,13 @@ class Category extends Component {
                     onOk={this.addCategory}
                     onCancel={this.handleCancel}
                 >
-                    <AddForm/>
+                    <AddForm
+                        categories={categories}
+                        parentId={parentId}
+                        setForm={(form) => {
+                            this.form = form
+                        }}
+                    />
                 </Modal>
                 {/*修改*/}
                 <Modal
@@ -226,7 +244,9 @@ class Category extends Component {
                     onOk={this.updateCategory}
                     onCancel={this.handleCancel}
                 >
-                    <UpdateForm categoryName={category.name} setForm = {(form)=>{this.form = form}}/>
+                    <UpdateForm categoryName={category.name} setForm={(form) => {
+                        this.form = form
+                    }}/>
                 </Modal>
             </div>
         );
