@@ -97,40 +97,51 @@ class Category extends Component {
         })
     }
 
-    addCategory = async () => {
-        // 1.隐藏确认框
-        this.setState({
-            showStatus: 0
+    addCategory = () => {
+        // 验证表单
+        this.form.validateFields(async (err, values) => {
+            if (!err) {
+                // 1.隐藏确认框
+                this.setState({
+                    showStatus: 0
+                })
+                // 2.收集数据,并提交添加分类的请求
+                const {parentId, categoryName} = values;
+                // 清除数据
+                this.form.resetFields()
+                const result = await reqAddCategory(categoryName, parentId);
+                if (result.status === 0) {
+                    this.getCategories()
+                }
+            }
         })
-        // 2.收集数据,并提交添加分类的请求
-        const {parentId, categoryName} = this.form.getFieldsValue();
-        // 清除数据
-        this.form.resetFields()
-        const result = await reqAddCategory(categoryName, parentId);
-        if (result.status === 0) {
-            this.getCategories()
-        }
-        // 3.
     }
 
     updateCategory = () => {
-        //1.隐藏确定框
-        this.setState({
-            showStatus: 0
+        // 验证表单
+        this.form.validateFields(async (err, values) => {
+            if (!err) {
+                //1.隐藏确定框
+                this.setState({
+                    showStatus: 0
+                })
+
+                debugger
+                const categoryId = this.category._id
+                const {categoryName} = values;
+
+                // 清除数据
+                this.form.resetFields()
+                //2.发请求更新分类
+                const result = await reqUpdateCategory({categoryId, categoryName});
+                if (result.status === 0) {
+                    //3.重新显示列表
+                    this.getCategories()
+
+                }
+            }
         })
 
-        const categoryId = this.category.id
-        const categoryName = this.form.getFieldValue('categoryName');
-
-        // 清除数据
-        this.form.resetFields()
-        //2.发请求更新分类
-        const result = reqUpdateCategory({categoryId, categoryName});
-        if (result.status === 0) {
-            //3.重新显示列表
-            this.getCategories()
-
-        }
     }
 
     // 关闭对话框
