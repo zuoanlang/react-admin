@@ -117,7 +117,8 @@ class ProductHome extends Component {
                             {/*通过state将product传递过去*/}
                             <Button type='link'
                                     onClick={() => this.props.history.push('/product/detail', {product})}>详情</Button>
-                            <Button type='link'>修改</Button>
+                            <Button type='link'
+                                onClick={()=>this.props.history.push('/product/addUpdate',{product})}>修改</Button>
                         </span>
                     )
                 }
@@ -153,7 +154,7 @@ class ProductHome extends Component {
         )
 
         const extra = (
-            <Button type='primary' onClick={()=>this.props.history.push('/product/addUpdate')}>
+            <Button type='primary' onClick={()=>this.props.history.push('/product/addUpdate',{})}>
                 <Icon type='plus'/>
                 添加商品
             </Button>
