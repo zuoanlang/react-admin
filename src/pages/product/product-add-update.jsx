@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {Button, Card, Cascader, Form, Icon, Input, message} from 'antd'
 import {reqCategories} from "../../api";
 import PicturesWall from "./pictures-wall";
+import RichTextEditor from "./rich-text-editor";
 
 const Item = Form.Item
 const {TextArea} = Input
@@ -16,11 +17,23 @@ class ProductAddUpdate extends Component {
         options: []
     }
 
+    constructor(props) {
+        super(props);
+
+        // 创建用来保存ref标识的标签对象的容器
+        this.pw = React.createRef();
+        this.editor = React.createRef();
+    }
+
     submit = () => {
         // 表单验证
         this.props.form.validateFields((err, values) => {
             if (!err) {
                 console.log(values)
+                const images = this.pw.current.getImages();
+                console.log(images)
+                const detail = this.editor.current.getDetail();
+                console.log(detail)
                 message.success("success")
             }
         })
@@ -89,7 +102,7 @@ class ProductAddUpdate extends Component {
      * @param callback 回调函数
      */
     validatePrice = (rule, value, callback) => {
-        if (value * 1 > 0) {
+        if (value * 1 > 0 ) {
             callback()
         } else {
             callback('价格必须大于0')
@@ -141,7 +154,7 @@ class ProductAddUpdate extends Component {
 
     render() {
         const {isUpdate, product} = this;
-        const {pCategoryId, categoryId} = product
+        const {pCategoryId, categoryId, imgs, detail} = product
         const categoryIds = []
         if (isUpdate) {
             if (pCategoryId === 0) {
@@ -218,10 +231,10 @@ class ProductAddUpdate extends Component {
 
                     </Item>
                     <Item label='商品图片'>
-                        <PicturesWall/>
+                        <PicturesWall ref={this.pw} imgs={imgs}/>
                     </Item>
                     <Item label='商品详情'>
-                        <Input type='number' placeholder='请输入商品价格' addonAfter='元'/>
+                        <RichTextEditor ref={this.editor} detail={detail}/>
                     </Item>
                     <Item>
                         <Button type='primary' onClick={this.submit}>提交</Button>

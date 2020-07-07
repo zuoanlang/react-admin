@@ -33,12 +33,19 @@ export const reqCategory = (categoryId) => ajax('/manage/category/info', {catego
  */
 export const reqUpdateStatus = (productId, status) => ajax('/manage/category/updateStatus', {productId, status}, 'POST')
 
-// 6.获取商品列表
+// 7.获取商品列表
 export const reqProducts = (pageSize, pageNum) => ajax('/manage/product/list', {pageSize, pageNum})
 
-// 7.搜索商品列表
+// 8.搜索商品列表
 export const reqSearchProducts = ({pageSize, pageNum, searchName, searchType}) => ajax('/manage/product/search', {
     pageSize,
     pageNum,
     [searchType]: searchName
 })
+
+/**
+ * 9.删除上传图片
+ * @param name 图片名称
+ * @returns {Promise | Promise<unknown>}
+ */
+export const reDeleteImg = (name) => ajax('/manage/img/delete', {name}, 'POST')
