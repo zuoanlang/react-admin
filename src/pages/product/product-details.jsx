@@ -51,13 +51,13 @@ class ProductDetails extends Component {
 
         //读取传递过来的数据
         const {name, desc, price, detail, imgs} = this.props.location.state.product;
-
+        debugger
         // 取出state中的数据
         const {cName1, cName2} = this.state
 
         const title = (
             <span>
-                <Button type='link' onClick={() => this.history.goBack()}>
+                <Button type='link' onClick={() => this.props.history.goBack()}>
                     <Icon type='arrow-left' style={{marginRight: 15, color: 'green', fontSize: 18}}/>
                 </Button>
                 <span>商品详情</span>

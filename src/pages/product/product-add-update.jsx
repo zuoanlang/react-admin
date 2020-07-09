@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {Button, Card, Cascader, Form, Icon, Input, message} from 'antd'
-import {reqCategories} from "../../api";
+import {reqCategories, reqAddOrUpdateProduct} from "../../api";
 import PicturesWall from "./pictures-wall";
 import RichTextEditor from "./rich-text-editor";
 
@@ -27,14 +27,37 @@ class ProductAddUpdate extends Component {
 
     submit = () => {
         // 表单验证
-        this.props.form.validateFields((err, values) => {
+        this.props.form.validateFields(async (err, values) => {
             if (!err) {
                 console.log(values)
-                const images = this.pw.current.getImages();
-                console.log(images)
+                const imgs = this.pw.current.getImages();
+                console.log(imgs)
                 const detail = this.editor.current.getDetail();
                 console.log(detail)
-                message.success("success")
+                // 1.收集数据，并分装成product对象
+                const {name, desc, price, categoryIds} = values
+                let pCategoryId, categoryId
+                if (categoryIds.length === 1) {
+                    pCategoryId = '0'
+                    categoryId = categoryIds[0]
+                } else {
+                    pCategoryId = categoryIds[0]
+                    categoryId = categoryIds[1]
+                }
+                const product = {name, desc, price, imgs, detail, pCategoryId, categoryId}
+                if (this.isUpdate) {
+                    product._id = this.product._id
+                }
+                // 2.调用接口，新建或者更新
+                const result = await reqAddOrUpdateProduct(product);
+
+                // 3.根据结果提示
+                if (result.status === 0) {
+                    message.success(`${this.isUpdate ? '更新' : '添加'}商品成功！`)
+                    this.props.history.goBack()
+                } else {
+                    message.error(`${this.isUpdate ? '更新' : '添加'}商品失败！`)
+                }
             }
         })
     }
@@ -102,7 +125,7 @@ class ProductAddUpdate extends Component {
      * @param callback 回调函数
      */
     validatePrice = (rule, value, callback) => {
-        if (value * 1 > 0 ) {
+        if (value * 1 > 0) {
             callback()
         } else {
             callback('价格必须大于0')

@@ -55,7 +55,7 @@ class ProductHome extends Component {
             result = await reqSearchProducts({pageSize: PAGE_SIZE, pageNum, searchName, searchType});
         } else {
             // 普通检索分页
-            result = await reqProducts(pageNum, PAGE_SIZE);
+            result = await reqProducts(PAGE_SIZE,pageNum);
         }
         this.setState({loading: false})
 
@@ -118,7 +118,7 @@ class ProductHome extends Component {
                             <Button type='link'
                                     onClick={() => this.props.history.push('/product/detail', {product})}>详情</Button>
                             <Button type='link'
-                                onClick={()=>this.props.history.push('/product/addUpdate',{product})}>修改</Button>
+                                    onClick={() => this.props.history.push('/product/addUpdate', {product})}>修改</Button>
                         </span>
                     )
                 }
@@ -154,7 +154,7 @@ class ProductHome extends Component {
         )
 
         const extra = (
-            <Button type='primary' onClick={()=>this.props.history.push('/product/addUpdate',{})}>
+            <Button type='primary' onClick={() => this.props.history.push('/product/addUpdate', {})}>
                 <Icon type='plus'/>
                 添加商品
             </Button>

@@ -49,3 +49,11 @@ export const reqSearchProducts = ({pageSize, pageNum, searchName, searchType}) =
  * @returns {Promise | Promise<unknown>}
  */
 export const reDeleteImg = (name) => ajax('/manage/img/delete', {name}, 'POST')
+
+/**
+ * 10.添加商品/更新商品
+ * @param product
+ * @returns {Promise | Promise<unknown>}
+ */
+export const reqAddOrUpdateProduct = (product) => ajax('/manage/product/' + (product._id ? 'update' : 'add'), product, 'POST')
+
