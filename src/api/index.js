@@ -57,3 +57,14 @@ export const reDeleteImg = (name) => ajax('/manage/img/delete', {name}, 'POST')
  */
 export const reqAddOrUpdateProduct = (product) => ajax('/manage/product/' + (product._id ? 'update' : 'add'), product, 'POST')
 
+/**
+ * 11.获取角色列表
+ * @returns {Promise | Promise<unknown>}
+ */
+export const reqRoles = () => ajax('/manage/role/list')
+
+/**
+ * 添加角色
+ * @returns {Promise<unknown>}
+ */
+export const reqAddRoles = ({roleName}) => ajax('/manage/role/add', {roleName}, 'POST')
