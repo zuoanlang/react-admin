@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {Card, Button, Table, Modal, message} from 'antd'
 import {reqAddRoles, reqRoles} from "../../api";
 import AddForm from "./add-form";
+import AuthForm from "./auth-form";
 
 /**
  * 角色路由
@@ -12,7 +13,8 @@ class Role extends Component {
         roles: [],
         loading: false,
         role: {},
-        isShowAdd: false
+        isShowAdd: false,
+        isShowAuth: false
     }
 
     /**
@@ -104,6 +106,12 @@ class Role extends Component {
 
     }
 
+    /**
+     * updateRole:更新角色
+     */
+    updateRole = () => {
+
+    }
 
     UNSAFE_componentWillMount(): void {
         this.initColumns()
@@ -115,7 +123,7 @@ class Role extends Component {
 
 
     render() {
-        const {roles, loading, role, isShowAdd} = this.state
+        const {roles, loading, role, isShowAdd,isShowAuth} = this.state
         const title = (
             <span>
                 <Button type='primary' style={{marginRight: 10}}
@@ -155,6 +163,20 @@ class Role extends Component {
                         setForm={(form) => {
                             this.form = form
                         }}
+                    />
+                </Modal>
+                {/*设置角色权限*/}
+                <Modal
+                    title="设置角色权限"
+                    visible={isShowAuth}
+                    onOk={this.updateRole}
+                    onCancel={() => {
+                        this.setState({isShowAuth: false})
+                        this.form.resetFields()
+                    }}
+                >
+                    <AuthForm
+
                     />
                 </Modal>
             </Card>
