@@ -59,6 +59,9 @@ class Role extends Component {
         return {
             onClick: event => {
                 console.log(role)
+                this.setState({
+                    role
+                })
             }// 点击行
 
         };
@@ -128,7 +131,7 @@ class Role extends Component {
             <span>
                 <Button type='primary' style={{marginRight: 10}}
                         onClick={() => this.setState({isShowAdd: true})}>创建角色</Button>
-                <Button type='primary' disabled={!role._id}>创建角色权限</Button>
+                <Button type='primary' disabled={!role._id} onClick={()=>this.setState({isShowAuth: true})}>创建角色权限</Button>
             </span>
         )
         return (
@@ -172,12 +175,9 @@ class Role extends Component {
                     onOk={this.updateRole}
                     onCancel={() => {
                         this.setState({isShowAuth: false})
-                        this.form.resetFields()
                     }}
                 >
-                    <AuthForm
-
-                    />
+                    <AuthForm role={role}/>
                 </Modal>
             </Card>
         );

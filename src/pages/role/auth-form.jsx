@@ -2,24 +2,21 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types'
 import {
     Form,
-    Input
+    Input,
+    Tree
 } from 'antd'
 
-const Item = Form.Item
+const Item = Form.Item;
+const {TreeNode} = Tree;
 
 class AuthForm extends Component {
 
     static propTypes = {
-        // 用来传递form对象的函数
-        setForm: PropTypes.func.isRequired
-    }
-
-    UNSAFE_componentWillMount() {
-        this.props.setForm(this.props.form)
+        role: PropTypes.object
     }
 
     render() {
-        const {getFieldDecorator} = this.props.form
+        const {role} = this.props
         const formItemLayout = {
             labelCol: {span: 4},
             wrapperCol: {span: 20},
@@ -28,22 +25,22 @@ class AuthForm extends Component {
         return (
             <Form {...formItemLayout}>
                 <Item label='角色名称'>
-                    {
-                        getFieldDecorator('roleName', {
-                            initialValue: '',
-                            rules: [
-                                {
-                                    required:true,
-                                    message:'角色名称必须输入'
-                                }
-                            ]
-                        })(
-                            <Input placeholder='请输入角色名称'/>
-                        )
-                    }
+                    <Input placeholder='请输入角色名称' value={role.name} disabled/>
                 </Item>
-
-
+                <Tree
+                    checkable
+                    defaultExpandAll={true}
+                >
+                    <TreeNode title="平台权限" key="all">
+                        <TreeNode title="parent 1-0" key="0-0-0" disabled>
+                            <TreeNode title="leaf" key="0-0-0-0" disableCheckbox/>
+                            <TreeNode title="leaf" key="0-0-0-1"/>
+                        </TreeNode>
+                        <TreeNode title="parent 1-1" key="0-0-1">
+                            <TreeNode title={<span style={{color: '#1890ff'}}>sss</span>} key="0-0-1-0"/>
+                        </TreeNode>
+                    </TreeNode>
+                </Tree>
             </Form>
         );
     }
