@@ -6,17 +6,62 @@ import {
     Tree
 } from 'antd'
 
+import menuList from "../../config/menuConfig";
+
 const Item = Form.Item;
 const {TreeNode} = Tree;
 
 class AuthForm extends Component {
 
+
     static propTypes = {
         role: PropTypes.object
     }
 
+    constructor(props) {
+        super(props);
+        // 根据传入角色的menus生成初始状态
+        const {menus} = this.props.role
+        this.state = {
+            checkedKeys: menus
+        }
+    }
+
+
+    /**
+     *
+     */
+    getTreeNodes = (menuList) => {
+        return menuList.reduce((pre, item) => {
+            pre.push(
+                <TreeNode title={item.title} key={item.key}>
+                    {item.children ? this.getTreeNodes(item.children) : null}
+                </TreeNode>
+            )
+            return pre
+        }, [])
+    }
+
+    /**
+     * 勾选中事件
+     */
+    onCheck = checkedKeys => {
+        console.log('onClick', checkedKeys)
+        this.setState({
+            checkedKeys
+        })
+    }
+    /**
+     *
+     * @constructor
+     */
+    UNSAFE_componentWillMount = () => {
+        this.treeNodes = this.getTreeNodes(menuList)
+    }
+
     render() {
         const {role} = this.props
+        const {checkedKeys} = this.state
         const formItemLayout = {
             labelCol: {span: 4},
             wrapperCol: {span: 20},
@@ -30,15 +75,11 @@ class AuthForm extends Component {
                 <Tree
                     checkable
                     defaultExpandAll={true}
+                    checkedKeys={checkedKeys}
+                    onCheck={this.onCheck}
                 >
                     <TreeNode title="平台权限" key="all">
-                        <TreeNode title="parent 1-0" key="0-0-0" disabled>
-                            <TreeNode title="leaf" key="0-0-0-0" disableCheckbox/>
-                            <TreeNode title="leaf" key="0-0-0-1"/>
-                        </TreeNode>
-                        <TreeNode title="parent 1-1" key="0-0-1">
-                            <TreeNode title={<span style={{color: '#1890ff'}}>sss</span>} key="0-0-1-0"/>
-                        </TreeNode>
+                        {this.treeNodes}
                     </TreeNode>
                 </Tree>
             </Form>
